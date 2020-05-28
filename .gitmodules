@@ -1,3 +1,6 @@
 [submodule "libft"]
 	path = libft
 	url = https://github.com/gmonacho/libft.git
+[submodule "libui"]
+	path = libui
+	url = https://github.com/gmonacho/libui.git

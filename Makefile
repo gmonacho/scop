@@ -1,46 +1,72 @@
-EXEC = scop
+NAME= scop
 
-CC = gcc
+CC= gcc
 
-SRCS = srcs/main.c
+SRC_PATH=	./srcs/
+BIN_PATH= 	./bins/
+INC_PATH= 	./includes/
+LIBFT_PATH= ./libft/
+LIBUI_PATH= ./libui/
+INC_PATH=	./includes/
+INCS_PATH=	./includes/\
+		 	./libft/includes/\
+		 	./libui/includes/
 
-HEADERS =	-I./includes/\
-			-I./libft/includes/\
-			-I./libui/includes
 
-OBJS = $(SRCS:.c=.o)
+SRC= 	main.c\
+		sc_create_vbo.c\
+		sc_create_vao.c\
+		sc_create_shader.c\
+		obj_parsing.c
+BIN= $(SRC:c=o)
+INC= scop.h
 
-LDFLAGS= -L./libui -lui -L./libft -lft -lasan -lSDL2 -lSDL2_ttf -lSDL2_mixer -lSDL2_image
+SRCS= $(addprefix $(SRC_PATH), $(SRC))
+BINS= $(addprefix $(BIN_PATH), $(BIN))
+INCS= $(addprefix $(INC_PATH), $(INC))
+INCI= $(addprefix -I, $(INCS_PATH))
+LIBS= libft/libft.a libui/libui.a
 
-CFLAGS += -Wall -Wextra -Werror -g -fsanitize=address
+SDLLIBS= -lSDL2 -lSDL2_ttf -lSDL2_image
+OGLLIBS= -lglut -lGL -lGLU -lGLEW -DGLEW_STATIC
+LDFLAGS= -L$(LIBUI_PATH) -lui -L$(LIBFT_PATH) -lft -lasan $(SDLLIBS) $(OGLLIBS)
+CFLAGS+= -Wall -Wextra -Werror -g3 -fsanitize=address -fno-omit-frame-pointer 
 
-all: $(EXEC)
+.PHONY: all
 
-$(EXEC): $(OBJS)
-		@make -C libft
-		@make -C libui
-		@$(CC) -o $@ $^ $(LDFLAGS)
-		@mkdir ./bin 2> /dev/null || true
-		@mv $(OBJS) ./bin
-		@echo "Project Compiled"
+all: $(NAME)
 
-%.o: %.c
-		@$(CC) -o $@ -c $< $(CFLAGS) $(HEADERS)
+$(NAME): $(LIBS) $(BINS)
+	@$(CC) -o $@ $^ $(LDFLAGS)
+	@echo "->Project Compiled"
 
-clean:
-	@make clean -C libft
-	@make clean -C libui
-	@rm -rf ./bin/$(OBJS)
-	@echo "objects deleted"
+$(BIN_PATH)%.o: $(SRC_PATH)%.c
+	@printf "."
+	@mkdir -p $(BIN_PATH) || true
+	@$(CC) -o $@ -c $< $(CFLAGS) $(INCI)
 
-fclean: clean
-	@make fclean -C libft
-	@make fclean -C libui
-	@rm -rf $(EXEC)
-	@echo "$(EXEC) is deleted"
+libft/libft.a:
+	@make -C $(LIBFT_PATH)
 
-re: fclean all
+libui/libui.a:
+	@make -C $(LIBUI_PATH)
 
 .PHONY: clean
-		fclean
-		re
+
+clean:
+	@make clean -C $(LIBFT_PATH)
+	@make clean -C $(LIBUI_PATH)
+	@rm -rf $(BIN_PATH)
+	@echo "objects deleted"
+
+.PHONY: fclean
+
+fclean: clean
+	@make fclean -C $(LIBFT_PATH)
+	@make fclean -C $(LIBUI_PATH)
+	@rm -r $(NAME)
+	@echo "$(NAME) is deleted"
+
+.PHONY: re
+
+re: fclean all

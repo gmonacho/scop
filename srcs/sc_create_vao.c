@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scop.h                                             :+:      :+:    :+:   */
+/*   sc_create_vao.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gal <gal@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/06/02 14:53:04 by gal               #+#    #+#             */
-/*   Updated: 2020/06/03 20:09:13 by gal              ###   ########lyon.fr   */
+/*   Created: 2020/06/03 19:45:38 by gal               #+#    #+#             */
+/*   Updated: 2020/06/03 20:08:54 by gal              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCOP_H_
-# define SCOP_H_
-# include <GL/glew.h>
+#include "scop.h"
 
-typedef struct	s_gl_shader
+
+GLuint	sc_create_vao()
 {
-	GLuint		vertex_id;
-	GLuint		frag_id;
-	GLuint		program_id;
-}				t_gl_shader;
+	GLuint vao;
 
-GLuint	sc_create_vbo(GLfloat *vertices,
-							GLuint len);
-
-GLuint	sc_create_vao();
-
-t_gl_shader	*sc_create_shader(const GLchar* vertex_shader,
-								const GLchar* fragment_shader);
-
-#endif
- 
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	return (vao);
+}

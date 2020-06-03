@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scop.h                                             :+:      :+:    :+:   */
+/*   sc_create_vbo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gal <gal@student.42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/06/02 14:53:04 by gal               #+#    #+#             */
-/*   Updated: 2020/06/03 20:09:13 by gal              ###   ########lyon.fr   */
+/*   Created: 2020/06/02 12:05:11 by gal               #+#    #+#             */
+/*   Updated: 2020/06/03 20:13:18 by gal              ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCOP_H_
-# define SCOP_H_
-# include <GL/glew.h>
-
-typedef struct	s_gl_shader
-{
-	GLuint		vertex_id;
-	GLuint		frag_id;
-	GLuint		program_id;
-}				t_gl_shader;
+#include "scop.h"
+#include <stdio.h>
 
 GLuint	sc_create_vbo(GLfloat *vertices,
-							GLuint len);
+							GLuint len)
+{
+	GLuint		vbo;
+	GLenum 		gl_error;
 
-GLuint	sc_create_vao();
-
-t_gl_shader	*sc_create_shader(const GLchar* vertex_shader,
-								const GLchar* fragment_shader);
-
-#endif
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER,
+					sizeof(*vertices) * len,
+					vertices,
+					GL_STATIC_DRAW);
+	gl_error = glGetError();
+	if (gl_error != GL_NO_ERROR)
+	{
+		printf("tamere\n");
+		return (0);
+	}
+	return (vbo);
+ }
  
